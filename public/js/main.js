@@ -94,11 +94,27 @@ function move_circles(){
                     c.momemtum_x += c.r * (.5 / a_dist);
                 }
 
+                if (c.x < 0 && c.momemtum_x < 0 ) {
+                    c.momentum_x = c.momemtum_x * -1;
+                }
+
+                if (c.x > window.innerWidth && c.momemtum_x > 0 ) {
+                    c.momentum_x = c.momemtum_x * -1;
+                }
+
                 // y momemtum
                 if (a.y <= c.y){
                     c.momemtum_y += c.r * (-.5 / a_dist);
                 }else{
                     c.momemtum_y += c.r * (.5 / a_dist);
+                }
+
+                if (c.y < 0 && c.momemtum_y < 0 ) {
+                    c.momentum_y = c.momemtum_y * -1;
+                }
+
+                if (c.y > window.innerHeight && c.momemtum_y > 0 ) {
+                    c.momentum_y = c.momemtum_y * -1;
                 }
             }
         });
