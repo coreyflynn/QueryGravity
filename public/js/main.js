@@ -1,7 +1,8 @@
 var canvas,
     ctx,
     circles = [],
-    attractors = [];
+    attractors = [],
+    momentumMode = 1;
 
 function init(){
     canvas = document.getElementById('query_canvas')
@@ -38,12 +39,15 @@ function draw(){
 function build_attactors(){
     attractors = [];
     attractors.push({x: canvas.width / 2, y: canvas.height / 2});
+    momentumMode = 1;
     setTimeout(function(){
         attractors = [];
         for (i=0; i< 25; i++){
             var attractor = {x: Math.random()*canvas.width, y: Math.random()*canvas.height};
             attractors.push(attractor);
         }
+        // tweak momentumMode
+        momentumMode = Math.ceil(Math.random() * 3);
     },2000)
 }
 
@@ -94,27 +98,11 @@ function move_circles(){
                     c.momemtum_x += c.r * (.5 / a_dist);
                 }
 
-                if (c.x < 0 && c.momemtum_x < 0 ) {
-                    c.momentum_x = c.momemtum_x * -1;
-                }
-
-                if (c.x > window.innerWidth && c.momemtum_x > 0 ) {
-                    c.momentum_x = c.momemtum_x * -1;
-                }
-
                 // y momemtum
                 if (a.y <= c.y){
                     c.momemtum_y += c.r * (-.5 / a_dist);
                 }else{
                     c.momemtum_y += c.r * (.5 / a_dist);
-                }
-
-                if (c.y < 0 && c.momemtum_y < 0 ) {
-                    c.momentum_y = c.momemtum_y * -1;
-                }
-
-                if (c.y > window.innerHeight && c.momemtum_y > 0 ) {
-                    c.momentum_y = c.momemtum_y * -1;
                 }
             }
         });
@@ -128,6 +116,41 @@ function move_circles(){
             c.momemtum_y = 5;
         }else if (c.momemtum_y < -5){
             c.momemtum_y = -5;
+        }
+
+        // bound position
+        if (c.x < -20) {
+            c.x = -20;
+        }
+
+        if (c.x > canvas.width + 20) {
+            c.x = canvas.width + 20;
+        }
+        
+        if (c.y < -20) {
+            c.y = -20;
+        }
+
+        if (c.y > canvas.height + 20) {
+            c.y = canvas.height + 20;
+        }
+
+        // momentum modes
+        switch (momentumMode) {
+            case 1:
+                c.momemtum_x = c.momemtum_x;
+                c.momemtum_y = c.momemtum_y;
+                break;
+            case 2:
+                c.momemtum_x = c.momemtum_x * 0.5;
+                c.momemtum_y = c.momemtum_y;
+                break;
+            case 3:
+                c.momemtum_x = c.momemtum_x;
+                c.momemtum_y = c.momemtum_y * 0.5;
+                break;
+            default:
+                break;
         }
 
         // position
